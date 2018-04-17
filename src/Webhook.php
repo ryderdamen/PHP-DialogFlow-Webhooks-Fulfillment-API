@@ -7,7 +7,6 @@
  * @since 1.0
  */
  
- 
 class Webhook {
 	
 	// Global Variables -----------------------------------------------------------------------------------------------------------
@@ -41,9 +40,8 @@ class Webhook {
 		}
 		return; // Otherwise, return nothing
 	}
-	
 	  
-	// Other Methods -------------------------------------------------------------------------------------------------------------------
+	// Other Methods ---------------------------------------------------------------------------------------------------------------
 	
 	// Determines the type of request this is @return STRING: webhook | other
 	private function getTypeOfRequest($projectId) {
@@ -77,15 +75,9 @@ class Webhook {
 		}
         
     }
-	
-		
-    
-    // Respond to DialogFlow --------------------------------------------------------------------------------------------------------
-    
-    // Build Methods ---------------------------------
-    
-    
-    
+	    
+    // Respond to DialogFlow ----------------------------------------------------------------------------------------------------
+            
     // Builds a BasicCard Object
     public function build_basicCard($simpleResponseText, $title, $subtitle, $formattedText, $imageObject, $buttonObject, $imageDisplayOptions) {
 	   
@@ -104,10 +96,7 @@ class Webhook {
 		   )
 	   );
 	   $this->items[] = $basicCard;
-	}
-	
-	
-	
+	}	
     
     // Builds the image attribute for a structure like the basic card
     public function build_image($url, $accessibilityText, $height = null, $width = null) {
@@ -118,9 +107,7 @@ class Webhook {
 			   'width' => $width,
 		   );
 		   return $image;
-    }
-    
-    
+    }    
     
     // Builds the button attribute for a structure
     public function build_button($title, $url) {
@@ -131,10 +118,7 @@ class Webhook {
 			)
 	    );
     }
-    
-    
-    
-    
+        
     // Builds a simple response item
     public function build_simpleResponse($textToSpeech, $displayText) {
 	    $response = array(
@@ -144,10 +128,7 @@ class Webhook {
 			)
 		);
 		$this->items[] = $response;
-    }
-    
-    
-    
+    }    
     
     // Builds a SSML response item    
     public function build_ssmlResponse($ssml, $displayText) {
@@ -159,9 +140,6 @@ class Webhook {
 		);
 		$this->items[] = $response;
     }
-    
-    
-    
     
     // Builds an audio response item (just a SSML with audio)
     public function build_audioResponse($url, $displayText) {
@@ -187,9 +165,6 @@ class Webhook {
 		$this->items[] = $response;
     }
     
-    
-    
-    
     // Responds immediately with an array of the user's choosing, printed as JSON
     public function respond_fullJson($jsonString) {
 	    
@@ -200,8 +175,6 @@ class Webhook {
         header("Content-type:application/json");
         echo $json;
     }
-
-
 
 	// Responds immediately with a simple text/string message
     public function respond_simpleMessage($textToSpeak, $stringToDisplay = '') {
@@ -220,7 +193,6 @@ class Webhook {
 			"displayText" => $stringToDisplay,
 		));
     }
-    
     
     // Sends the response to Dialogflow
     public function respond() {
@@ -248,7 +220,6 @@ class Webhook {
 	   echo json_encode($response);
     }
       
-   
     // Redefine fallback / default text for speech (in case a user doesn't have a google device)
     public function setFallbackText($text) {
 		$this->speech = $text;
