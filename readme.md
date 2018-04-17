@@ -1,5 +1,5 @@
-# PHP Dialogflow Webhook Filfillment
-A simple API for handling webhook requests and responses from Dialogflow in PHP.
+# PHP Dialogflow Webhook Fulfillment
+A simple API for handling webhook requests and responses from DialogFlow in PHP.
 
 ## Getting Started
 
