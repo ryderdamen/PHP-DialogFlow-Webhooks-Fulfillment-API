@@ -10,7 +10,7 @@
  
 class Webhook {
 	
-	// Global Variables ----------------------------------------------------------------------------------------------------------------
+	// Global Variables -----------------------------------------------------------------------------------------------------------
 	
 	// Data from Dialogflow
     public $decodedWebhook = null;
@@ -19,18 +19,16 @@ class Webhook {
     // Other
     public $hasResponded = false;
     
-    
     // Response To Dialogflow
-    private $response = null;
     public $expectUserResponse = true; // Default, expect a user's response
+    private $items = array();
     public $conversationToken = "{\"state\":null,\"data\":{}}";
     public $speech = 'Sorry, that action is not available on this platform.';
     public $displayText = 'Sorry, that action is not available on this platform.';
     
-    private $items = array();
     
    
-	// Constructor --------------------------------------------------------------------------------------------------------------------
+	// Constructor ----------------------------------------------------------------------------------------------------------------
 	
 	public function __construct($projectId) {
 		
@@ -190,6 +188,8 @@ class Webhook {
     }
     
     
+    
+    
     // Responds immediately with an array of the user's choosing, printed as JSON
     public function respond_fullJson($jsonString) {
 	    
@@ -200,6 +200,8 @@ class Webhook {
         header("Content-type:application/json");
         echo $json;
     }
+
+
 
 	// Responds immediately with a simple text/string message
     public function respond_simpleMessage($textToSpeak, $stringToDisplay = '') {
@@ -220,36 +222,8 @@ class Webhook {
     }
     
     
-    // Delete
-    public function rich_response() {
-	    header("Content-type:application/json");
-	    $response = array(
-			'conversationToken' => null,
-			'userStorage' => null,
-			'resetUserStorage' => false,
-			'customPushMessage' => array(),
-			'expectUserResponse' => true,
-			'finalResponse' => array(
-			   'richResponse' => array(
-				   'items' => array(array(
-					   'simpleResponse' => array(
-						   'textToSpeech' => 'Hello there',
-						   'displayText' => 'oh hai',
-					   ))
-				   )
-			   )
-		   ) 
-	    );
-	    
-	    echo json_encode($response);
-	    
-    }
-    
-    
-    
-    
-   // Sends the response to Dialogflow
-   public function respond() {
+    // Sends the response to Dialogflow
+    public function respond() {
 	   
 	   // Prevent duplicate responses
 	   if ($this->hasResponded) return;
@@ -263,7 +237,6 @@ class Webhook {
 			   )
 		   )
 	   );
-	   
 	   $response = array(
 		   'speech' => $this->speech,
 		   'displayText' => $this->displayText,
@@ -273,23 +246,13 @@ class Webhook {
 	   
 	   header("Content-type:application/json");
 	   echo json_encode($response);
-   }
+    }
+      
    
-   
-   
-   
-   // Redefine fallback / default text for speech (in case a user doesn't have a google device)
-   public function setFallbackText($text) {
-	   $this->speech = $text;
-   }
-
-
-
-
-
-
-
-
+    // Redefine fallback / default text for speech (in case a user doesn't have a google device)
+    public function setFallbackText($text) {
+		$this->speech = $text;
+    }
 
     // DialogFlow Data Retrieval --------------------------------------------------------------------------------------------------------
 
@@ -308,10 +271,12 @@ class Webhook {
 	    return $this->decodedWebhook['result']['metadata']['intentName'];
     }
     
+    // Returns the language
     public function get_language() {
 	    return $this->decodedWebhook['lang'];
     }
     
+    // Returns the timestamp
     public function get_timestamp() {
 	    return $this->decodedWebhook['timestamp'];
     }
@@ -334,6 +299,10 @@ class Webhook {
 		return false;
     }
     
-	
+    // Ends the conversation by not expecting a response from the user
+    public function endConversation() {
+	    $this->expectUserResponse = false;
+    }
+    
 
 } // End of Class Webhook

@@ -121,4 +121,9 @@ $wh->respond();
 
 `````
 
+## Other
+
+### Ending a conversation
+By calling the endConversation() function, you can indicate to dialogFlow that you are not expecting a response. By default, a response will be expected.
+
 
