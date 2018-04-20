@@ -4,7 +4,7 @@
  * Webhook Class
  * Handles the workload for webhooks from DialogFlow, and provides an API for simple responses
  *
- * @since 1.0
+ * @since 2.0
  */
  
 class Webhook {
@@ -17,6 +17,7 @@ class Webhook {
     
     // Other
     public $hasResponded = false;
+    private $platforms = array('PLATFORM_UNSPECIFIED');
     
     // Response To Dialogflow
     public $expectUserResponse = true; // Default, expect a user's response
@@ -77,9 +78,46 @@ class Webhook {
     }
 	    
     // Respond to DialogFlow ----------------------------------------------------------------------------------------------------
+    
+    
+    // Builds an item for the carousel
+    public function build_carouselItem($title, $description, $imageUrl, $imageAlt, $dialogKey = '', $dialogSynonyms = '' ) {
+	    return array(
+		    'info' => array(
+			    'key' => $dialogKey,
+			    'synonyms' => $dialogSynonyms,
+		    ),
+		    'title' => $title,
+		    'description' => $description,
+		    'image' => array(
+			    'imageUri' => $imageUrl,
+			    'accessibilityText' => $imageAlt,
+		    ),
+	    );
+    }
+    
+    public function build_carousel($simpleResponseText, $items) {
+	    
+	    // There must be a simple response before a carousel, so create one now
+	   $this->build_simpleResponse($simpleResponseText, $simpleResponseText);
+	   $carousel = array(
+	   		'carouselSelect' => array(
+			   'items' => $items
+		   )
+	   );
+	   $this->items[] = $carousel;
+    }
             
     // Builds a BasicCard Object
-    public function build_basicCard($simpleResponseText, $title, $subtitle, $formattedText, $imageObject, $buttonObject, $imageDisplayOptions) {
+    public function build_basicCard(
+    	$simpleResponseText,
+    	$title,
+    	$subtitle,
+    	$formattedText,
+    	$imageObject,
+    	$buttonObject,
+    	$imageDisplayOptions = 'DEFAULT'
+    	) {
 	   
 	   // There must be a simple response before a card, so create one now
 	   $this->build_simpleResponse($simpleResponseText, $simpleResponseText);
@@ -204,16 +242,18 @@ class Webhook {
 	   // Set google as default for now
 	   $integrations = array(
 		   'google' => array(
+			   'expectUserResponse' => $this->expectUserResponse,
 			   'richResponse' => array(
 				   'items' => $this->items
 			   )
 		   )
 	   );
+	   
+	   $fulfillmentMessages = array();
+	   
 	   $response = array(
-		   'speech' => $this->speech,
-		   'displayText' => $this->displayText,
-		   'expectUserResponse' => $this->expectUserResponse,
-		   'data' => $integrations,
+		   'fulfillmentText' => $this->speech,		   
+		   'payload' => $integrations,		   
 	   );
 	   
 	   header("Content-type:application/json");
@@ -239,12 +279,12 @@ class Webhook {
     
     // Gets the intent passed with the webhook
     public function get_intent() {
-	    return $this->decodedWebhook['result']['metadata']['intentName'];
+	    return $this->decodedWebhook['queryResult']['intent']['displayName'];
     }
     
     // Returns the language
     public function get_language() {
-	    return $this->decodedWebhook['lang'];
+	    return $this->decodedWebhook['queryResult']['languageCode'];
     }
     
     // Returns the timestamp
@@ -254,18 +294,18 @@ class Webhook {
     
     // Returns the user's query
     public function get_query() {
-	    return $this->decodedWebhook['result']['resolvedQuery'];
+	    return $this->decodedWebhook['queryResult']['queryText'];
     }
     
     // Returns a full array of the parameters passed with the webhook
     public function get_parameters() {
-	    return $this->decodedWebhook['result']['parameters'];
+	    return $this->decodedWebhook['queryResult']['parameters'];
     }
     
     // Returns a specific parameter, or false if no parameter exists
     public function get_parameter($parameter) {
-	    if (isset($this->decodedWebhook['result']['parameters'][$parameter])) {
-		    return $this->decodedWebhook['result']['parameters'][$parameter];
+	    if (isset($this->decodedWebhook['queryResult']['parameters'][$parameter])) {
+		    return $this->decodedWebhook['queryResult']['parameters'][$parameter];
 	    }
 		return false;
     }
@@ -273,6 +313,11 @@ class Webhook {
     // Ends the conversation by not expecting a response from the user
     public function endConversation() {
 	    $this->expectUserResponse = false;
+    }
+ 
+    // Adds FACEBOOK, SLACK, TELEGRAM, KIK, SKYPE, LINE, VIBER, ACTIONS_ON_GOOGLE, for rich messages
+    public function addPlatform($platformEnum) {
+	    $this-platform[] = $platform;
     }
     
 
