@@ -1,0 +1,129 @@
+{
+    "originalRequest": {
+        "source": "google",
+        "version": "2",
+        "data": {
+            "isInSandbox": true,
+            "surface": {
+                "capabilities": [
+                    {
+                        "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+                    },
+                    {
+                        "name": "actions.capability.WEB_BROWSER"
+                    },
+                    {
+                        "name": "actions.capability.AUDIO_OUTPUT"
+                    },
+                    {
+                        "name": "actions.capability.SCREEN_OUTPUT"
+                    }
+                ]
+            },
+            "inputs": [
+                {
+                    "rawInputs": [
+                        {
+                            "query": "cyxu",
+                            "inputType": "VOICE"
+                        }
+                    ],
+                    "arguments": [
+                        {
+                            "rawText": "cyxu",
+                            "textValue": "cyxu",
+                            "name": "text"
+                        }
+                    ],
+                    "intent": "actions.intent.TEXT"
+                }
+            ],
+            "user": {
+                "lastSeen": "2018-03-28T22:06:51Z",
+                "locale": "en-CA",
+                "userId": "user1234"
+            },
+            "conversation": {
+                "conversationId": "10000",
+                "type": "ACTIVE",
+                "conversationToken": "[\"10as63fcce-45-4aa-9e7f-a4e817e79_id_dialog_context\",\"actions_capability_audio_output\",\"actions_capability_media_response_audio\",\"actions_capability_screen_output\",\"actions_capability_web_browser\",\"get_weather_dialog_context\",\"get_weather_dialog_params_airport\",\"google_assistant_input_type_voice\",\"google_assistant_welcome\"]"
+            },
+            "availableSurfaces": [
+                {
+                    "capabilities": [
+                        {
+                            "name": "actions.capability.AUDIO_OUTPUT"
+                        },
+                        {
+                            "name": "actions.capability.SCREEN_OUTPUT"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "id": "b103e8ed",
+    "timestamp": "2018-03-28T22:07:23.168Z",
+    "lang": "en-ca",
+    "result": {
+        "source": "agent",
+        "resolvedQuery": "cyxu",
+        "speech": "",
+        "action": "",
+        "actionIncomplete": false,
+        "parameters": {
+            "airport": {
+                "name": "London",
+                "city": "London",
+                "country": "Canada",
+                "IATA": "YXU",
+                "ICAO": "CYXU"
+            }
+        },
+        "contexts": [],
+        "metadata": {
+            "matchedParameters": [
+                {
+                    "required": true,
+                    "dataType": "@sys.airport",
+                    "name": "airport",
+                    "value": "$airport",
+                    "prompts": [
+                        {
+                            "lang": "en",
+                            "value": "What's your airport code?"
+                        },
+                        {
+                            "lang": "en",
+                            "value": "What's the airport code you're looking for?"
+                        }
+                    ],
+                    "isList": false
+                }
+            ],
+            "intentName": "get_weather",
+            "isResponseToSlotfilling": true,
+            "intentId": "123456",
+            "webhookUsed": "true",
+            "webhookForSlotFillingUsed": "false",
+            "endConversation": true,
+            "nluResponseTime": 9
+        },
+        "fulfillment": {
+            "speech": "",
+            "messages": [
+                {
+                    "type": 0,
+                    "speech": ""
+                }
+            ]
+        },
+        "score": 1
+    },
+    "status": {
+        "code": 200,
+        "errorType": "success",
+        "webhookTimedOut": false
+    },
+    "sessionId": "123456"
+}
