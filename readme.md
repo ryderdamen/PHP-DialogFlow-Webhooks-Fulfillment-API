@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/ryderdamen/PHP-DialogFlow-Webhooks-Fulfillment-API.svg?style=svg)](https://circleci.com/gh/ryderdamen/PHP-DialogFlow-Webhooks-Fulfillment-API)
+[![CircleCI](https://circleci.com/gh/ryderdamen/PHP-DialogFlow-Webhooks-Fulfillment-API.svg?style=shield)](https://circleci.com/gh/ryderdamen/PHP-DialogFlow-Webhooks-Fulfillment-API)
 # PHP Dialogflow Webhook Fulfillment
 A simple API for handling webhook requests and responses from DialogFlow in PHP.
 
