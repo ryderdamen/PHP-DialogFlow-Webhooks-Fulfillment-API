@@ -7,9 +7,5 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - restore_cache:
-        keys:
-          - composer-v1-{{ checksum "composer.lock" }}
-          - composer-v1-
       - run: composer update
       - run: vendor/bin/phpunit tests/test_webhook.php
