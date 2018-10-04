@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/ryderdamen/PHP-DialogFlow-Webhooks-Fulfillment-API.svg?style=svg)](https://circleci.com/gh/ryderdamen/PHP-DialogFlow-Webhooks-Fulfillment-API)
 # PHP Dialogflow Webhook Fulfillment
 A simple API for handling webhook requests and responses from DialogFlow in PHP.
 
@@ -11,7 +12,8 @@ To send a simple response to all platforms, use the following code
 
 `````php
 include('Webhook.php');
-$wh = new Webhook('test-project-id');
+$args = ['projectId' => 'test-project-id'];
+$wh = new Webhook($args);
 $wh->respond_simpleMessage('Say this out loud', 'Display this text on screen');
 
 `````
@@ -21,9 +23,10 @@ Data is posted from the DialogFlow service to a location of your choosing (in th
 
 ### Get All Decoded Data
 `````php
-// Initialize
+// Instantiate
 include('Webhook.php');
-$wh = new Webhook('test-project-id');
+$args = ['projectId' => 'test-project-id'];
+$wh = new Webhook($args);
 
 // Get all data as an array
 $allData = $wh->getDecodedWebhook();
@@ -31,9 +34,10 @@ $allData = $wh->getDecodedWebhook();
 
 ### Get the intent of the conversation
 `````php
-// Initialize
+// Instantiate
 include('Webhook.php');
-$wh = new Webhook('test-project-id');
+$args = ['projectId' => 'test-project-id'];
+$wh = new Webhook($args);
 
 // Get the intent name of the conversation
 $intentName = $wh->get_intent();
@@ -41,9 +45,10 @@ $intentName = $wh->get_intent();
 
 ### Get any parameters DialogFlow has filtered out for you
 `````php
-// Initialize
+// Instantiate
 include('Webhook.php');
-$wh = new Webhook('test-project-id');
+$args = ['projectId' => 'test-project-id'];
+$wh = new Webhook($args);
 
 // Get all parameters as an array
 $parametersArray = $wh->getParameters();
@@ -64,7 +69,7 @@ Here's an example of how to set up a simple service for only google devices.
 
 `````php
 
-// Initialize
+// Instantiate
 include('Webhook.php');
 $wh = new Webhook('test-project-id');
 
@@ -85,7 +90,7 @@ If you want to add more nuance to your speech, consider using SSML.
 
 `````php
 
-// Initialize
+// Instantiate
 include('Webhook.php');
 $wh = new Webhook('test-project-id');
 
@@ -106,7 +111,7 @@ Using SSML you can send only audio back to a user. Simply provide the url, or ur
 
 `````php
 
-// Initialize
+// Instantiate
 include('Webhook.php');
 $wh = new Webhook('test-project-id');
 
@@ -124,6 +129,4 @@ $wh->respond();
 ## Other
 
 ### Ending a conversation
-By calling the endConversation() function, you can indicate to dialogFlow that you are not expecting a response. By default, a response will be expected.
-
-
+By calling the endConversation() method, you can indicate to dialogFlow that you are not expecting a response. By default, a response from the user will be expected.

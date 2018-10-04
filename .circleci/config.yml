@@ -8,4 +8,4 @@ jobs:
     steps:
       - checkout
       - run: composer update
-      - run: vendor/bin/phpunit tests/
+      - run: vendor/bin/phpunit tests/test_webhook.php
