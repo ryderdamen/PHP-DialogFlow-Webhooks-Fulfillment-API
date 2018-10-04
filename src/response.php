@@ -1,52 +1,38 @@
 <?php
 
 /**
- * Webhook Class
- * Handles the workload for webhooks from DialogFlow, and provides an API for simple responses
+ * WebhookResponse Class
+ * Response Object for diaglogflow, PHPified
  *
- * @since 2.0
- * @author Ryder Damen <dev@ryderdamen.com>
+ * @since 1.0
  */
  
-class Webhook {
+class WebhookResponse {
 	
 	// Global Variables -----------------------------------------------------------------------------------------------------------
 	
 	// Data from Dialogflow
-    public $decodedWebhook = null;
-	public $googleUserId = false;
-	public $projectId = false;
-    
-    // Other
-    public $hasResponded = false;
-	private $platforms = array('PLATFORM_UNSPECIFIED');
-	private $inputStream = "php://input";
-    
-    // Response To Dialogflow
-    public $expectUserResponse = true; // Default, expect a user's response
+	
+	// ResponseObject Variables
+    public $platform = 'PLATFORM_UNSPECIFIED';
+    public $expectUserResponse = true;
     private $items = array();
     public $conversationToken = "{\"state\":null,\"data\":{}}";
-    public $speech = 'Sorry, that action is not available on this platform.';
-    public $displayText = 'Sorry, that action is not available on this platform.';
+    public $speech = 'Sorry, something went wrong.';
+    public $displayText = 'Sorry, something went wrong.';
+
     
+    // Meta
+    public $hasResponded = false;
     
+
    
 	// Constructor ----------------------------------------------------------------------------------------------------------------
 	
-	public function __construct($args) {
+	public function __construct($platform) {
 		
-		// If a project ID is provided for verification
-		if ( array_key_exists('projectId', $args) ) {
-			$this->projectId = $args['projectId'];
-		}
-
-		// Define an input stream for testing
-		if ( array_key_exists('inputStream', $args) ) {
-			$this->inputStream = $args['inputStream'];
-		}
-
 		// Get the type of request this is
-		$requestType = $this->getTypeOfRequest();
+		$requestType = $this->getTypeOfRequest($projectId);
 		
 		if ($requestType == 'webhook') {
 			$this->processWebHook();
@@ -57,22 +43,19 @@ class Webhook {
 	  
 	// Other Methods ---------------------------------------------------------------------------------------------------------------
 	
-	/**
-	 * Determines the type of request this is
-	 *
-	 * @return [string] 'webhook' or 'other'
-	 */
-	private function getTypeOfRequest() {
+	// Determines the type of request this is @return STRING: webhook | other
+	private function getTypeOfRequest($projectId) {
 		
 		// If this is a POST request, likely it's Google, but let's check to confirm
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			try {
-				$json = file_get_contents($this->inputStream);
+				$json = file_get_contents('php://input');
 				$action = json_decode($json, true);
 				if ($action == '' or $action == null) {
 					return 'other';
                 }
-                // Confirm that this request matches the projectID // TODO
+                // Confirm that this request matches the projectID
+
 				$this->decodedWebhook = $action; // Make the webhook JSON available to the class
 				return 'webhook';
 			}
@@ -83,11 +66,7 @@ class Webhook {
         return 'other'; // Else, just return something else
 	}
 	
-	/**
-	 * Processes the webhook from google for the user to access
-	 *
-	 * @return void
-	 */
+	// Processes the webhook from google for the user to access @return void
 	private function processWebHook() {
 		
 		// If there is a user ID, add it to the global scope for access
