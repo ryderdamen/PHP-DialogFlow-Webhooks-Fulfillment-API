@@ -83,6 +83,7 @@ class Webhook {
         return 'other'; // Else, just return something else
 	}
 	
+
 	/**
 	 * Processes the webhook from google for the user to access
 	 *
@@ -96,11 +97,20 @@ class Webhook {
 		}
         
     }
-	    
-    // Respond to DialogFlow ----------------------------------------------------------------------------------------------------
+	        
     
-    
-    // Builds an item for the carousel
+	/**
+	 * Builds an item for the carousel
+	 *
+	 * @deprecated  2.0.0
+	 * @param string $title
+	 * @param string $description
+	 * @param string $imageUrl
+	 * @param string $imageAlt
+	 * @param string $dialogKey
+	 * @param string $dialogSynonyms
+	 * @return void
+	 */
     public function build_carouselItem($title, $description, $imageUrl, $imageAlt, $dialogKey = '', $dialogSynonyms = '' ) {
 	    return array(
 		    'info' => array(
@@ -115,7 +125,16 @@ class Webhook {
 		    ),
 	    );
     }
-    
+	
+	
+	/**
+	 * Builds the carousel from carouselItems
+	 *
+	 * @deprecated 2.0.0
+	 * @param string $simpleResponseText
+	 * @param string $items
+	 * @return void
+	 */
     public function build_carousel($simpleResponseText, $items) {
 	    
 	    // There must be a simple response before a carousel, so create one now
@@ -127,8 +146,20 @@ class Webhook {
 	   );
 	   $this->items[] = $carousel;
     }
-            
-    // Builds a BasicCard Object
+
+
+    /**
+	 * Builds a BasicCard Object
+	 *
+	 * @param [type] $simpleResponseText
+	 * @param [type] $title
+	 * @param [type] $subtitle
+	 * @param [type] $formattedText
+	 * @param [type] $imageObject
+	 * @param [type] $buttonObject
+	 * @param string $imageDisplayOptions
+	 * @return void
+	 */
     public function build_basicCard(
     	$simpleResponseText,
     	$title,
@@ -155,8 +186,18 @@ class Webhook {
 	   );
 	   $this->items[] = $basicCard;
 	}	
-    
-    // Builds the image attribute for a structure like the basic card
+
+
+    /**
+	 * Builds the image attribute for a structure like the basic card
+	 *
+	 * @deprecated 2.0.0
+	 * @param [type] $url
+	 * @param [type] $accessibilityText
+	 * @param [type] $height
+	 * @param [type] $width
+	 * @return void
+	 */
     public function build_image($url, $accessibilityText, $height = null, $width = null) {
 		   $image = array(
 			   'url' => $url,
@@ -166,8 +207,16 @@ class Webhook {
 		   );
 		   return $image;
     }    
-    
-    // Builds the button attribute for a structure
+
+
+    /**
+	 * Builds the button attribute for a structure
+	 *
+	 * @deprecated 2.0.0
+	 * @param string $title
+	 * @param string $url
+	 * @return void
+	 */
     public function build_button($title, $url) {
 	    return array(
 		    'title' => $title,
@@ -175,7 +224,8 @@ class Webhook {
 			    'url' => $url,
 			)
 	    );
-    }
+	}
+	
         
     // Builds a simple response item
     public function build_simpleResponse($textToSpeech, $displayText) {
@@ -199,7 +249,15 @@ class Webhook {
 		$this->items[] = $response;
     }
     
-    // Builds an audio response item (just a SSML with audio)
+
+	/**
+	 * Builds an audio response item (just a SSML with audio)
+	 *
+	 * @deprecated 2.0.0
+	 * @param string $url
+	 * @param string $displayText
+	 * @return void
+	 */
     public function build_audioResponse($url, $displayText) {
 	    
 	    // Loop through the URLs if they are an array and build the ssml as necessary
@@ -231,10 +289,17 @@ class Webhook {
 	    $this->hasResponded = true;
 	    
         header("Content-type:application/json");
-        echo $json;
+        echo $jsonString;
     }
 
-	// Responds immediately with a simple text/string message
+
+	/**
+	 * Responds immediately with a simple text/string message
+	 * @deprecated version 2.0.0
+	 * @param string $textToSpeak
+	 * @param string $stringToDisplay
+	 * @return void
+	 */
     public function respond_simpleMessage($textToSpeak, $stringToDisplay = '') {
 	    
 	    // Prevent duplicate responses
@@ -251,7 +316,8 @@ class Webhook {
 			"displayText" => $stringToDisplay,
 		));
     }
-    
+	
+	
     // Sends the response to Dialogflow
     public function respond() {
 	   

@@ -3,24 +3,17 @@
  * Tests for Webhook Class
  */
 use PHPUnit\Framework\TestCase;
+require(dirname(__FILE__) . '/WebhookTestBase.php');
 require_once(dirname(__FILE__) . '/../src/Webhook.php');
 
-
-function test_environment_setup() {
-    $_SERVER['REQUEST_METHOD'] = 'POST';
-    return [
-        'projectId' => 'test-project',
-        'inputStream' => dirname(__FILE__) . '/data/sample_request.json',
-    ];
-}
 
 /**
  * Test Class for Webhook Object
  */
-class WebhookTest extends TestCase {
+class WebhookTest extends WebhookTestBase {
 
     public function test_instantiationAndInputParse() {
-        $webhook = new Webhook(test_environment_setup());
+        $webhook = new Webhook($this->setup_environment());
 
         $this->assertJsonStringEqualsJsonString(
             json_encode($webhook->decodedWebhook),
@@ -35,7 +28,7 @@ class WebhookTest extends TestCase {
             'inputStream' => dirname(__FILE__) . '/data/sample_request.json',
         ];
         $webhook = new Webhook($args);
-
+    
         $this->assertEquals($webhook->decodedWebhook, null);
     }
 
