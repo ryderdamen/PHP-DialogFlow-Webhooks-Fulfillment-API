@@ -26,6 +26,20 @@ if ( ! class_exists('WebhookTestBase')) {
         }
 
 
+        /**
+         * Strips whitespace for the purpose of the tests
+         * Not to be used on actual HTML - strips genuinely all whitespace
+         *
+         * @param [string] $input
+         * @return string
+         */
+        protected function dangerously_strip_whitespace($input) {
+            $input = str_replace(array("\r", "\n"), '', $input); // Remove Line Breaks
+            $input = preg_replace('/\s+/', '', $input); // Remove whitespace
+            return $input;
+        }
+
+
     }
 
 

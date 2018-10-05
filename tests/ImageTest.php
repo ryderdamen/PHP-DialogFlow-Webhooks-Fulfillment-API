@@ -17,7 +17,7 @@ class ImageTest extends WebhookTestBase {
      * Tests that when an image is instantiated without its required properties
      * it throws an exception indicating it needs more properties in the constructor
      * 
-     * @expectedException Exception
+     * @expectedException PropertyIsRequiredException
      * @return void
      */
     public function test_imageWontRenderWithoutRequiredProperties() {

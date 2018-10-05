@@ -14,7 +14,7 @@ class Button extends ResponseBase implements ResponseTemplate {
     public $url;
 
     private $requiredProperties = [
-        'speech', 'displayText',
+        'title', 'url',
     ];
 
     /**

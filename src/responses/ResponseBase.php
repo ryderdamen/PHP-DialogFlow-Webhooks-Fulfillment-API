@@ -55,7 +55,7 @@ if ( ! class_exists('ResponseBase') ) {
         protected function check_if_required_fields_set($required) {
             foreach( get_object_vars($this) as $name => $property ) {
                 if ($property === null && in_array($name, $required)) {
-                    throw new Exception( get_class($this) . ' requires the property ' . $name );
+                    throw new PropertyIsRequiredException( get_class($this) . ' requires the property ' . $name );
                 }
             }
         }
@@ -78,6 +78,22 @@ if ( ! interface_exists('ResponseTemplate') ) {
          */
         public function render();
 
+    }
+
+}
+
+if ( ! class_exists('PropertyIsRequiredException') ) {
+
+    /**
+     * Custom exception for displaying when a property is
+     * required
+     */
+    class PropertyIsRequiredException extends Exception {
+
+        public function __toString() {
+            return __CLASS__ . ": [{$this->code}]: {$this->message} - Please add it to the args array.\n";
+        }
+        
     }
 
 }
