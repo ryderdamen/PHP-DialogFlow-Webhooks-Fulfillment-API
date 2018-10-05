@@ -3,7 +3,7 @@
  * Tests for Webhook Class
  */
 use PHPUnit\Framework\TestCase;
-require(dirname(__FILE__) . '/WebhookTestBase.php');
+require_once(dirname(__FILE__) . '/WebhookTestBase.php');
 require_once(dirname(__FILE__) . '/../src/Webhook.php');
 
 
