@@ -10,11 +10,11 @@ require('ResponseBase.php');
  */
 class SimpleMessage extends ResponseBase implements ResponseTemplate {
     
-    public $speech;
+    public $textToSpeech;
     public $displayText;
 
     private $requiredProperties = [
-        'speech', 'displayText',
+        'textToSpeech', 'displayText',
     ];
 
     public function __construct($args) {
