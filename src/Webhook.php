@@ -24,7 +24,7 @@ class Webhook {
     
     // Response To Dialogflow
     public $expectUserResponse = true; // Default, expect a user's response
-    private $items = array();
+    public $items = array();
     public $conversationToken = "{\"state\":null,\"data\":{}}";
     public $speech = 'Sorry, that action is not available on this platform.';
     public $displayText = 'Sorry, that action is not available on this platform.';

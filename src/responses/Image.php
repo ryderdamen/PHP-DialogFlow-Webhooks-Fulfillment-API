@@ -12,8 +12,8 @@ class Image extends ResponseBase implements ResponseTemplate {
     
     public $url;
     public $accessibilityText;
-    public $height = "";
-    public $width = "";
+    public $height;
+    public $width;
 
     private $requiredProperties = [
         'url', 'accessibilityText',
@@ -21,11 +21,10 @@ class Image extends ResponseBase implements ResponseTemplate {
 
     public function __construct($args) {
         $this->add_args_to_class($args);
-        $this->check_if_required_fields_set();
     }
 
     public function render() {
-        $this->check_if_required_fields_set($this->required_properties);
+        $this->check_if_required_fields_set($this->requiredProperties);
         return $this->render_all_class_props();
     }
 
