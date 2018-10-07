@@ -1,6 +1,6 @@
 <?php
 
-require('ResponseBase.php');
+require('Response.php');
 
     if ( ! class_exists('Button') ) {
 
@@ -10,7 +10,7 @@ require('ResponseBase.php');
      *
      * @since 2.0
      */
-    class Button extends ResponseBase implements ResponseTemplate {
+    class Button extends Response implements ResponseTemplate {
         
         public $title;
         public $url;

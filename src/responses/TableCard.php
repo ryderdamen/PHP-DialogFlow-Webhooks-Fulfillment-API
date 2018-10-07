@@ -1,5 +1,5 @@
 <?php
-require('ResponseBase.php');
+require('Response.php');
 
 
 if ( ! class_exists('Table') ) {
@@ -10,7 +10,7 @@ if ( ! class_exists('Table') ) {
      *
      * @since 2.0
      */
-    class Table extends ResponseBase implements ResponseTemplate {
+    class Table extends Response implements ResponseTemplate {
         
         public $title;
         public $subtitle;

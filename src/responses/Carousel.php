@@ -1,5 +1,5 @@
 <?php
-require('ResponseBase.php');
+require('Response.php');
 
 if ( ! class_exists('Carousel') ) {
 
@@ -9,7 +9,7 @@ if ( ! class_exists('Carousel') ) {
      *
      * @since 2.0
      */
-    class Carousel extends ResponseBase implements ResponseTemplate {
+    class Carousel extends Response implements ResponseTemplate {
         
         const MAXIMUM_ITEMS = 10;
         const MINIMUM_ITEMS = 2;

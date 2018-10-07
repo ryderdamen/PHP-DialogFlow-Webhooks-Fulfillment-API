@@ -1,6 +1,6 @@
 <?php
 
-require('ResponseBase.php');
+require('Response.php');
 
 if ( ! class_exists('SimpleMessage') ) {
 
@@ -10,7 +10,7 @@ if ( ! class_exists('SimpleMessage') ) {
      *
      * @since 2.0
      */
-    class SimpleMessage extends ResponseBase implements ResponseTemplate {
+    class SimpleMessage extends Response implements ResponseTemplate {
         
         public $textToSpeech;
         public $displayText;

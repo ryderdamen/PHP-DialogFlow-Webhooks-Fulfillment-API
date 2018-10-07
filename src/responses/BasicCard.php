@@ -1,6 +1,6 @@
 <?php
 
-require('ResponseBase.php');
+require('Response.php');
 
 if ( ! class_exists('BasicCard') ) {
 
@@ -10,7 +10,7 @@ if ( ! class_exists('BasicCard') ) {
      *
      * @since 2.0
      */
-    class BasicCard extends ResponseBase implements ResponseTemplate {
+    class BasicCard extends Response implements ResponseTemplate {
         
         public $title;
         public $subtitle;

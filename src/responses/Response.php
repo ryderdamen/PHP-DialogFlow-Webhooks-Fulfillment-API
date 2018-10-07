@@ -1,15 +1,15 @@
 <?php
 
-if ( ! class_exists('ResponseBase') ) {
+if ( ! class_exists('Response') ) {
 
     /**
-     * ResponseBase Class
+     * Response Class
      * A basic response object allowing shared
      * methods for other types of responses
      *
      * @since 2.0
      */
-    class ResponseBase {
+    class Response {
 
         
         /**
@@ -79,7 +79,7 @@ if ( ! class_exists('ResponseBase') ) {
         }
 
 
-    } // End of Class ResponseBase
+    } // End of Class Response
 
 }
 

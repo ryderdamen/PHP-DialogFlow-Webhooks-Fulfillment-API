@@ -1,5 +1,5 @@
 <?php
-require('ResponseBase.php');
+require('Response.php');
 
 if ( ! class_exists('CarouselItem') ) {
 
@@ -9,7 +9,7 @@ if ( ! class_exists('CarouselItem') ) {
      *
      * @since 2.0
      */
-    class CarouselItem extends ResponseBase implements ResponseTemplate {
+    class CarouselItem extends Response implements ResponseTemplate {
         
         public $title;
         public $description;

@@ -1,6 +1,6 @@
 <?php
 
-require('ResponseBase.php');
+require('Response.php');
 
 if ( ! class_exists('AudioMessage') ) {
 
@@ -10,7 +10,7 @@ if ( ! class_exists('AudioMessage') ) {
      *
      * @since 2.0
      */
-    class AudioMessage extends ResponseBase implements ResponseTemplate {
+    class AudioMessage extends Response implements ResponseTemplate {
         
         public $url;
         public $displayText;

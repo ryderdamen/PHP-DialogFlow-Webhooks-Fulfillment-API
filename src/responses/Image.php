@@ -1,6 +1,6 @@
 <?php
 
-require('ResponseBase.php');
+require('Response.php');
 
 if ( ! class_exists('Image') ) {
 
@@ -10,7 +10,7 @@ if ( ! class_exists('Image') ) {
      *
      * @since 2.0
      */
-    class Image extends ResponseBase implements ResponseTemplate {
+    class Image extends Response implements ResponseTemplate {
         
         public $url;
         public $accessibilityText;
