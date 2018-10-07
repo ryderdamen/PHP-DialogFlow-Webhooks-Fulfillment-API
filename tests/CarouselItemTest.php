@@ -52,18 +52,32 @@ class CarouselItemTest extends WebhookTestBase {
      */
     public function test_carouselItemRendersImage() {
         $args = [
-            'url' => 'https://example.com/image.jpeg',
-            'accessibilityText' => 'An image of something',
-        ];
-        $image = new Image($args);
-        $args = [
             'title' => 'Hello World',
             'description' => 'How are you doing?',
-            'image' => $image,
+            'image' => new Image([
+                'url' => 'https://example.com/image.jpeg',
+                'accessibilityText' => 'An image of something',
+            ]),
         ];
         $item = new CarouselItem($args);
         $rendered = $item->render();
-        print_r($rendered);
+        $expected = '
+            {
+                "optionInfo": {
+                    "key":null,
+                    "synonyms":null
+                },
+                "title": "Hello World",
+                "description": "How are you doing?",
+                "image": {
+                    "imageUri": "https:\/\/example.com\/image.jpeg",
+                    "accessibilityText": "An image of something"
+                }
+            }';
+        $this->assertEquals(
+            $this->dangerously_strip_whitespace(json_encode($rendered)),
+            $this->dangerously_strip_whitespace($expected)
+        );
     }
 
 }

@@ -13,7 +13,7 @@ if ( ! class_exists('CarouselItem') ) {
         
         public $title;
         public $description;
-        public $imageObject;
+        public $image;
         public $dialogKey;
         public $dialogSynonyms;
 
@@ -36,8 +36,8 @@ if ( ! class_exists('CarouselItem') ) {
          * @return string|null
          */
         private function get_image_url() {
-            if ($this->imageObject != null) {
-                return $this->imageObject->url;
+            if ($this->image != null) {
+                return $this->image->url;
             }
             return null;
         }
@@ -50,8 +50,8 @@ if ( ! class_exists('CarouselItem') ) {
          * @return string|null
          */
         private function get_image_alt() {
-            if ($this->imageObject != null) {
-                return $this->imageObject->accessibilityText;
+            if ($this->image != null) {
+                return $this->image->accessibilityText;
             }
             return null;
         }
