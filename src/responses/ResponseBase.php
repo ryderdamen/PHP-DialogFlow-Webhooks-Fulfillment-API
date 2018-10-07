@@ -61,6 +61,24 @@ if ( ! class_exists('ResponseBase') ) {
         }
 
 
+        /**
+         * Calls the render function on one or multiple objects
+         *
+         * @param array $objects
+         * @return array - rendered array of objects
+         */
+        protected function render_multiple_objects($objects) {
+            if (is_array($objects)) {
+                $rendered = [];
+                foreach ($objects as $obj) {
+                    $rendered[] = $obj-render();
+                }
+            } else {
+                return [ $objects->render() ];
+            }
+        }
+
+
     } // End of Class ResponseBase
 
 }

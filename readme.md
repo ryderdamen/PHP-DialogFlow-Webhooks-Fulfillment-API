@@ -107,7 +107,7 @@ $wh->respond();
 `````
 
 #### Sending an audio message
-Using SSML you can send only audio back to a user. Simply provide the url, or urls (as an array), to the audio files like so.
+Using SSML you can send only audio back to a user. Simply provide the url, or urls (as an array), to the audio files like so. You can use the [Sound Library provided by Google](https://developers.google.com/actions/tools/sound-library/) to find links to different sound effects.
 
 `````php
 
