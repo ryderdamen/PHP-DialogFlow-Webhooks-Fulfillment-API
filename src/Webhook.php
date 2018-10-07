@@ -28,8 +28,11 @@ class Webhook {
     public $conversationToken = "{\"state\":null,\"data\":{}}";
     public $speech = 'Sorry, that action is not available on this platform.';
     public $displayText = 'Sorry, that action is not available on this platform.';
-    
-    
+	
+	
+	// 2.0
+	public $simpleResponse;
+	private $richResponseItem;
    
 	// Constructor ----------------------------------------------------------------------------------------------------------------
 	
@@ -318,12 +321,57 @@ class Webhook {
 	}
 	
 
-	public function addResponse($responseItem) {
+	/**
+	 * Adds a rich component to the response (Card, Media Response, Carousel, etc)
+	 *
+	 * @param BasicCard|Carousel|MediaResponse|TableCard $responseItem
+	 * @return void
+	 */
+	public function add_rich_response($responseItem) {
 		try {
-			$this->items[] = $responseItem->render();
+			$this->richResponseItem = $responseItem->render();
 		} catch (Exception $e) {
-			throw new Exception('Not a valid response object');
+			throw new Exception('Not a valid rich response object');
 		}
+	}
+
+
+	/**
+	 * Builds an input response, indicating that the conversation should continue
+	 *
+	 * @return array
+	 */
+	private function build_input_response() {
+
+	}
+
+
+	/**
+	 * Builds the 'final' response array, intending that the conversation is over
+	 *
+	 * @return array
+	 */
+	private function build_final_response() {
+		{
+
+			// Union field response can be only one of the following:
+			"speechResponse": {
+			  object(SpeechResponse)
+			},
+			"richResponse": {
+			  object(RichResponse)
+			}
+			// End of list of possible types for union field response.
+		  }
+
+		return [
+			'speechResponse' => $this->simpleResponse,
+			'richResponse' => [
+				'items' => [
+					$this->richResponseItem
+				],
+			],
+		]
 	}
 	
 	
@@ -333,6 +381,14 @@ class Webhook {
 	   // Prevent duplicate responses
 	   if ($this->hasResponded) return;
 	   $this->hasResponded = true;
+
+		// Determine if this is an input, or final response
+		if ($this->expectUserResponse === true) {
+			// Input
+		} else {
+			// $this->build_final_response();
+		}
+
 	   
 	   // Set google as default for now
 	   $integrations = array(
