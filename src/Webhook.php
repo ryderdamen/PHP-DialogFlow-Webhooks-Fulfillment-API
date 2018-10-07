@@ -315,7 +315,16 @@ class Webhook {
 			"speech" => $textToSpeak,
 			"displayText" => $stringToDisplay,
 		));
-    }
+	}
+	
+
+	public function addResponse($responseItem) {
+		try {
+			$this->items[] = $responseItem->render();
+		} catch (Exception $e) {
+			throw new Exception('Not a valid response object');
+		}
+	}
 	
 	
     // Sends the response to Dialogflow
