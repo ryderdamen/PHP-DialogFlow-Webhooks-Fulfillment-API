@@ -51,10 +51,10 @@ $args = ['projectId' => 'test-project-id'];
 $wh = new Webhook($args);
 
 // Get all parameters as an array
-$parametersArray = $wh->getParameters();
+$parametersArray = $wh->get_parameters();
 
 // OR, get a specific parameter. If it does not exist, the function will return FALSE
-$parameterValue = $wh->getParameter('country');
+$parameterValue = $wh->get_parameter('country');
 `````
 
 
