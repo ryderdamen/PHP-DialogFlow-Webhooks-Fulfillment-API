@@ -26,6 +26,7 @@ class Webhook {
     private $conversation_token = "{\"state\":null,\"data\":{}}";
 	private $rich_responses = [];
 	private $simple_responses = [];
+	private $platforms_responding = [];
 
 
     /**
@@ -33,6 +34,19 @@ class Webhook {
 	 */
 	private $input_stream = "php://input";
 	private $is_test = false;
+
+
+	/**
+	 * Platform Enums
+	 */
+	public $GOOGLE = 0;
+	public $FACEBOOK = 1;
+	public $KIK = 2;
+	public $LINE = 3;
+	public $SKYPE = 4;
+	public $SLACK = 5;
+	public $TELEGRAM = 6;
+	public $VIBER = 7;
 
 
 	/**
@@ -151,20 +165,31 @@ class Webhook {
 
 
 	/**
-	 * Builds the response integrations (google, etc.)
+	 * Builds the response integrations (google, facebook, etc.)
 	 * 
 	 * @return array
 	 */
 	private function build_response_integrations() {
-		// Default return only Google right now  // TODO Add more
-		return [
-			'google' => array(
+		$integrations = [];
+		$enums = [
+			0 => 'google',
+			1 => 'facebook',
+			2 => 'kik',
+			3 => 'line',
+			4 => 'skype',
+			5 => 'slack',
+			6 => 'telegram',
+			7 => 'viber',
+		];
+		foreach($this->platforms_responding as $platform_enum) {
+			$integrations[$enums[$platform_enum]] = array(
 				'expect_user_response' => $this->expect_user_response,
 				'rich_response' => [
 					'items' => $this->rich_responses
 				]
-			)
-		];
+			);
+		}
+		return $integrations;
 	}
 
 
