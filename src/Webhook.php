@@ -19,7 +19,6 @@ class Webhook {
     
     // Other
     public $hasResponded = false;
-	private $platforms = array('PLATFORM_UNSPECIFIED');
 	private $inputStream = "php://input";
     
     // Response To Dialogflow
@@ -32,42 +31,37 @@ class Webhook {
 	
 	// 2.0
 	public $simpleResponse;
-	private $richResponseItem;
+	private $richResponse;
    
-	// Constructor ----------------------------------------------------------------------------------------------------------------
-	
+
+	/**
+	 * Default constructor for the webhook class
+	 * 
+	 * @param array Arguments for webhook setup
+	 */
 	public function __construct($args) {
-		
-		// If a project ID is provided for verification
 		if ( array_key_exists('projectId', $args) ) {
 			$this->projectId = $args['projectId'];
 		}
-
 		// Define an input stream for testing
 		if ( array_key_exists('inputStream', $args) ) {
 			$this->inputStream = $args['inputStream'];
 		}
-
-		// Get the type of request this is
-		$requestType = $this->getTypeOfRequest();
-		
-		if ($requestType == 'webhook') {
-			$this->processWebHook();
+		$request_type = $this->get_type_of_request();
+		if ($request_type == 'webhook') {
+			$this->process_webhook();
 			return;
 		}
-		return; // Otherwise, return nothing
+		return;
 	}
 	  
-	// Other Methods ---------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * Determines the type of request this is
 	 *
 	 * @return [string] 'webhook' or 'other'
 	 */
-	private function getTypeOfRequest() {
-		
-		// If this is a POST request, likely it's Google, but let's check to confirm
+	private function get_type_of_request() {
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			try {
 				$json = file_get_contents($this->inputStream);
@@ -75,15 +69,14 @@ class Webhook {
 				if ($action == '' or $action == null) {
 					return 'other';
                 }
-                // Confirm that this request matches the projectID // TODO
-				$this->decodedWebhook = $action; // Make the webhook JSON available to the class
+				$this->decodedWebhook = $action;
 				return 'webhook';
 			}
 			catch (Exception $e) {
 				return 'other';
 			}
 		}
-        return 'other'; // Else, just return something else
+        return 'other';
 	}
 	
 
@@ -92,207 +85,12 @@ class Webhook {
 	 *
 	 * @return void
 	 */
-	private function processWebHook() {
-		
+	private function process_webhook() {
 		// If there is a user ID, add it to the global scope for access
 		if ( isset($this->decodedWebhook['originalRequest']['data']['user']['userId']) ) {
 			$this->googleUserId = $this->decodedWebhook['originalRequest']['data']['user']['userId'];
 		}
         
-    }
-	        
-    
-	/**
-	 * Builds an item for the carousel
-	 *
-	 * @deprecated  2.0.0
-	 * @param string $title
-	 * @param string $description
-	 * @param string $imageUrl
-	 * @param string $imageAlt
-	 * @param string $dialogKey
-	 * @param string $dialogSynonyms
-	 * @return void
-	 */
-    public function build_carouselItem($title, $description, $imageUrl, $imageAlt, $dialogKey = '', $dialogSynonyms = '' ) {
-	    return array(
-		    'info' => array(
-			    'key' => $dialogKey,
-			    'synonyms' => $dialogSynonyms,
-		    ),
-		    'title' => $title,
-		    'description' => $description,
-		    'image' => array(
-			    'imageUri' => $imageUrl,
-			    'accessibilityText' => $imageAlt,
-		    ),
-	    );
-    }
-	
-	
-	/**
-	 * Builds the carousel from carouselItems
-	 *
-	 * @deprecated 2.0.0
-	 * @param string $simpleResponseText
-	 * @param string $items
-	 * @return void
-	 */
-    public function build_carousel($simpleResponseText, $items) {
-	    
-	    // There must be a simple response before a carousel, so create one now
-	   $this->build_simpleResponse($simpleResponseText, $simpleResponseText);
-	   $carousel = array(
-	   		'carouselSelect' => array(
-			   'items' => $items
-		   )
-	   );
-	   $this->items[] = $carousel;
-    }
-
-
-    /**
-	 * Builds a BasicCard Object
-	 *
-	 * @param [type] $simpleResponseText
-	 * @param [type] $title
-	 * @param [type] $subtitle
-	 * @param [type] $formattedText
-	 * @param [type] $imageObject
-	 * @param [type] $buttonObject
-	 * @param string $imageDisplayOptions
-	 * @return void
-	 */
-    public function build_basicCard(
-    	$simpleResponseText,
-    	$title,
-    	$subtitle,
-    	$formattedText,
-    	$imageObject,
-    	$buttonObject,
-    	$imageDisplayOptions = 'DEFAULT'
-    	) {
-	   
-	   // There must be a simple response before a card, so create one now
-	   $this->build_simpleResponse($simpleResponseText, $simpleResponseText);
-	   
-	   // Construct the basic card JSON
-	   $basicCard = array(
-	   		'basicCard' => array(
-			   'title' => $title,
-			   'subtitle' => $subtitle,
-			   'formattedText' => $formattedText,
-			   'image' => $imageObject,
-			   'buttons' => array($buttonObject),
-			   'imageDisplayOptions' => $imageDisplayOptions,
-		   )
-	   );
-	   $this->items[] = $basicCard;
-	}	
-
-
-    /**
-	 * Builds the image attribute for a structure like the basic card
-	 *
-	 * @deprecated 2.0.0
-	 * @param [type] $url
-	 * @param [type] $accessibilityText
-	 * @param [type] $height
-	 * @param [type] $width
-	 * @return void
-	 */
-    public function build_image($url, $accessibilityText, $height = null, $width = null) {
-		   $image = array(
-			   'url' => $url,
-			   'accessibilityText' => $accessibilityText,
-			   'height' => $height,
-			   'width' => $width,
-		   );
-		   return $image;
-    }    
-
-
-    /**
-	 * Builds the button attribute for a structure
-	 *
-	 * @deprecated 2.0.0
-	 * @param string $title
-	 * @param string $url
-	 * @return void
-	 */
-    public function build_button($title, $url) {
-	    return array(
-		    'title' => $title,
-		    'openUrlAction' => array(
-			    'url' => $url,
-			)
-	    );
-	}
-	
-        
-    // Builds a simple response item
-    public function build_simpleResponse($textToSpeech, $displayText) {
-	    $response = array(
-		   'simpleResponse' => array(
-			   'textToSpeech' => $textToSpeech,
-			   'displayText' => $displayText
-			)
-		);
-		$this->items[] = $response;
-    }    
-    
-    // Builds a SSML response item    
-    public function build_ssmlResponse($ssml, $displayText) {
-	    $response = array(
-		   'simpleResponse' => array(
-			   'ssml' => $ssml,
-			   'displayText' => $displayText
-			)
-		);
-		$this->items[] = $response;
-    }
-    
-
-	/**
-	 * Builds an audio response item (just a SSML with audio)
-	 *
-	 * @deprecated 2.0.0
-	 * @param string $url
-	 * @param string $displayText
-	 * @return void
-	 */
-    public function build_audioResponse($url, $displayText) {
-	    
-	    // Loop through the URLs if they are an array and build the ssml as necessary
-	    $ssml = ' <speak> ';
-	    if ( is_array($url) ) {
-		    foreach($url as $u) {
-			     $ssml .= "<audio src = '" . $u . "' /> ";
-		    }
-	    }
-	    else {
-		    $ssml .= "<audio src = '" . $url . "' /> ";
-	    }
-	    $ssml .= '</speak>';
-	    
-	    $response = array(
-		   'simpleResponse' => array(
-			   'ssml' => $ssml,
-			   'displayText' => $displayText
-			)
-		);
-		$this->items[] = $response;
-    }
-    
-    // Responds immediately with an array of the user's choosing, printed as JSON
-    public function respond_fullJson($jsonString) {
-	    
-	    // Prevent duplicate responses
-	    if ($this->hasResponded) return;
-	    $this->hasResponded = true;
-	    
-        header("Content-type:application/json");
-        echo $jsonString;
     }
 
 
@@ -324,12 +122,12 @@ class Webhook {
 	/**
 	 * Adds a rich component to the response (Card, Media Response, Carousel, etc)
 	 *
-	 * @param BasicCard|Carousel|MediaResponse|TableCard $responseItem
+	 * @param BasicCard|Carousel|MediaResponse|TableCard $response_item
 	 * @return void
 	 */
-	public function add_rich_response($responseItem) {
+	public function add_rich_response($response_item) {
 		try {
-			$this->richResponseItem = $responseItem->render();
+			$this->richResponse = $response_item->render();
 		} catch (Exception $e) {
 			throw new Exception('Not a valid rich response object');
 		}
@@ -337,139 +135,193 @@ class Webhook {
 
 
 	/**
-	 * Builds an input response, indicating that the conversation should continue
-	 *
-	 * @return array
+	 * Adds a simple response to the conversation
 	 */
-	private function build_input_response() {
-
+	public function add_simple_response($text) {
+		// TODO
 	}
-
 
 	/**
-	 * Builds the 'final' response array, intending that the conversation is over
-	 *
+	 * Adds a response (be it a rich or simple response)
+	 * 
+	 * @param string|object -- String or proper response object
+	 * @return null
+	 */
+	private function add_response($response_item) {
+		if (is_string($response_item)) {
+			return $this->add_simple_response($response_item);
+		}
+		$this->add_rich_response($response_item);
+	}
+
+	
+
+	/**
+	 * Builds the response integrations (google, etc.)
+	 * 
 	 * @return array
 	 */
-	private function build_final_response() {
-		{
-
-			// Union field response can be only one of the following:
-			"speechResponse": {
-			  object(SpeechResponse)
-			},
-			"richResponse": {
-			  object(RichResponse)
-			}
-			// End of list of possible types for union field response.
-		  }
-
+	private function build_response_integrations() {
+		// Default return only Google right now  // TODO Add more
 		return [
-			'speechResponse' => $this->simpleResponse,
-			'richResponse' => [
-				'items' => [
-					$this->richResponseItem
-				],
-			],
-		]
+			'google' => array(
+				'expectUserResponse' => $this->expectUserResponse,
+				'richResponse' => [
+					'items' => $this->items
+				]
+			)
+		];
 	}
 	
+
+	/**
+	 * Asks the user for input (keeps the conversation open)
+	 */
+	public function ask($response) {
+		$this->expectUserResponse = true;
+		$this->add_response($response);
+	}
+
+	/** 
+	 * Tells the user (closes the conversation)
+	 */
+	public function tell($response) {
+		$this->expectUserResponse = false;
+		$this->add_response($response);
+	}
+
 	
-    // Sends the response to Dialogflow
+    /**
+	 * Sends the HTTP application/json request back to DialogFlow
+	 * @return null
+	 */
     public function respond() {
-	   
 	   // Prevent duplicate responses
 	   if ($this->hasResponded) return;
 	   $this->hasResponded = true;
-
-		// Determine if this is an input, or final response
-		if ($this->expectUserResponse === true) {
-			// Input
-		} else {
-			// $this->build_final_response();
-		}
-
-	   
-	   // Set google as default for now
-	   $integrations = array(
-		   'google' => array(
-			   'expectUserResponse' => $this->expectUserResponse,
-			   'richResponse' => array(
-				   'items' => $this->items
-			   )
-		   )
-	   );
-	   
-	   $fulfillmentMessages = array();
-	   
 	   $response = array(
 		   'fulfillmentText' => $this->speech,		   
-		   'payload' => $integrations,		   
+		   'payload' => $this->build_response_integrations(),		   
 	   );
-	   
 	   header("Content-type:application/json");
 	   echo json_encode($response);
-    }
-      
-    // Redefine fallback / default text for speech (in case a user doesn't have a google device)
+	}
+	
+	
+
+
+    /**
+	 * Redefine fallback / default text for speech (in case a user doesn't have a compatible device)
+	 */
     public function setFallbackText($text) {
 		$this->speech = $text;
     }
 
-    // DialogFlow Data Retrieval --------------------------------------------------------------------------------------------------------
 
-    // Returns the full decoded webhook array for the user
+    /**
+	 * Returns the full decoded webhook array for the user
+	 * @return array
+	 */
     public function getDecodedWebhook() {
         return $this->decodedWebhook;
     }
 
-    // Returns the raw input for the user (if it's from dialogflow: it's a json string)
+
+    /**
+	 * Returns the raw input for the user (if it's from dialogflow: it's a json string)
+	 * @return string
+	 */
     public function getRawInput() {
 	    return file_get_contents('php://input');
     }
-    
-    // Gets the intent passed with the webhook
+	
+	
+    /**
+	 * Gets the intent name passed with the webhook
+	 * @return string - The name of the intent
+	 */
     public function get_intent() {
-	    return $this->decodedWebhook['queryResult']['intent']['displayName'];
+	    return $this->decodedWebhook['result']['metadata']['intentName'];
     }
-    
-    // Returns the language
+	
+	
+    /**
+	 * Return the input language the user is using
+	 * @return string - The language code
+	 */
     public function get_language() {
-	    return $this->decodedWebhook['queryResult']['languageCode'];
+	    return $this->decodedWebhook['lang'];
     }
-    
-    // Returns the timestamp
-    public function get_timestamp() {
-	    return $this->decodedWebhook['timestamp'];
+	
+	
+  	/**
+	* Return the timestamp this request was executed at
+	* @return int|string
+    */
+    public function get_timestamp($string=false) {
+		if ($string !== false) {
+			return $this->decodedWebhook['timestamp'];
+		}
+		return strtotime($this->decodedWebhook['timestamp']);
     }
-    
-    // Returns the user's query
+	
+	
+    /**
+	 * Returns the user's query (what they asked)
+	 * @return string
+	 */
     public function get_query() {
-	    return $this->decodedWebhook['queryResult']['queryText'];
-    }
-    
-    // Returns a full array of the parameters passed with the webhook
+	    return $this->decodedWebhook['result']['resolvedQuery'];
+	}
+	
+
+	/**
+	 * Returns the unique conversation ID for this conversation
+	 * @return string
+	 */
+	public function get_conversation_id() {
+		return $this->decodedWebhook['originalRequest']['data']['conversation']['conversationId'];
+	}
+	
+	
+    /**
+	 * Returns a full array of the parameters passed with the webhook
+	 * @return array
+	 */
     public function get_parameters() {
-	    return $this->decodedWebhook['queryResult']['parameters'];
+	    return $this->decodedWebhook['result']['parameters'];
     }
-    
-    // Returns a specific parameter, or false if no parameter exists
+	
+	
+    /**
+	 * Returns a specific parameter, or false if no parameter exists
+	 * @param string parameter -- The parameter to retrieve
+	 * @return false|array Returns false if not found, or the parameter array
+	 */
     public function get_parameter($parameter) {
-	    if (isset($this->decodedWebhook['queryResult']['parameters'][$parameter])) {
-		    return $this->decodedWebhook['queryResult']['parameters'][$parameter];
+	    if (isset($this->decodedWebhook['result']['parameters'][$parameter])) {
+		    return $this->decodedWebhook['result']['parameters'][$parameter];
 	    }
 		return false;
     }
-    
-    // Ends the conversation by not expecting a response from the user
-    public function endConversation() {
+	
+	
+	/**
+	 * Ends the conversation by not expecting a response from the user
+	 * Google expects this by default
+	 */
+    public function end_conversation() {
 	    $this->expectUserResponse = false;
-    }
- 
-    // Adds FACEBOOK, SLACK, TELEGRAM, KIK, SKYPE, LINE, VIBER, ACTIONS_ON_GOOGLE, for rich messages
-    public function addPlatform($platformEnum) {
-	    $this->platform[] = $platform;
-    }
+	}
+	
+
+	/**
+	 * Keeps the mic open for the user to respond
+	 * Mutually exclusive with $this->end_conversation() 
+	 */
+	public function keep_mic_open() {
+		$this->expectUserResponse = true;
+	}
     
 
 } // End of Class Webhook

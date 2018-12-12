@@ -33,36 +33,4 @@ class BasicCardTest extends WebhookTestBase {
         $this->assertFalse(property_exists($card, 'horses'));
     }
 
-    /**
-     * Ensures the new object card system does not lose any attributes
-     * of the old method
-     *
-     * @return void
-     */
-    public function test_basicCardRegression() {
-        $args = [
-            'title' => "Hello World",
-            'subtitle' => "It's great to be here",
-            'formattedText' => "",
-            'imageObject' => [],
-            'buttons' => [],
-        ];
-        $card = new BasicCard($args);
-        $new = $card->render();
-        $wh = new Webhook($this->setup_environment());
-        $wh->build_basicCard(
-            "",
-            $args['title'],
-            $args['subtitle'],
-            $args['formattedText'],
-            $args['imageObject'],
-            $args['buttons']
-        );
-        $old = $wh->items[1];
-        $this->assertJsonStringEqualsJsonString(
-            json_encode($old),
-            json_encode($new)
-        );
-    }
-
 }

@@ -26,24 +26,4 @@ class ImageTest extends WebhookTestBase {
         $image->render();
     }
 
-
-    /**
-     * Asserts that the new image object still returns the same
-     * dictionary as the old image method
-     *
-     * @return void
-     */
-    public function test_imageRegression() {
-        $args = [
-            'url' => 'https://example.com/image.jpeg',
-            'accessibilityText' => 'This is a photo of something',
-        ];
-        $image = new Image($args);
-        $new = $image->render();
-        $wh = new Webhook($this->setup_environment());
-        $old = $wh->build_image($args['url'], $args['accessibilityText']);
-        $this->assertJsonStringEqualsJsonString(json_encode($old), json_encode($new));
-    }
-
-
 }
