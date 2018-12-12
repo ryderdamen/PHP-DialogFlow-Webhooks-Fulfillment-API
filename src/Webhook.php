@@ -32,6 +32,7 @@ class Webhook {
 	 * Other
 	 */
 	private $input_stream = "php://input";
+	private $is_test = false;
 
 
 	/**
@@ -48,6 +49,9 @@ class Webhook {
 		if ( array_key_exists('inputStream', $args) ) {
 			$this->input_stream = $args['inputStream'];
 		}
+		if ( array_key_exists('isTest', $args) ) {
+			$this->is_test = true;
+		}
 		$request_type = $this->get_type_of_request();
 		if ($request_type == 'webhook') {
 			$this->process_webhook();
@@ -63,6 +67,9 @@ class Webhook {
 	 * @return null
 	 */
 	public function __destruct() {
+		if ($this->is_test) {
+			return;
+		}
 		$this->respond();
 	}
 
@@ -203,15 +210,16 @@ class Webhook {
 	 * @return null
 	 */
     private function respond() {
-	   // Prevent duplicate responses
-	   if ($this->has_responded) return;
-	   $this->has_responded = true;
-	   $response = array(
-		   'fulfillmentText' => $this->render_fulfillment_text(),
-		   'payload' => $this->build_response_integrations(),		   
-	   );
-	   header("Content-type:application/json");
-	   echo json_encode($response);
+		if ($this->has_responded) return;
+		$this->has_responded = true;
+		$response = array(
+			'fulfillmentText' => $this->render_fulfillment_text(),
+			'payload' => $this->build_response_integrations(),		   
+		);
+		if ( ! headers_sent() ) {
+			header("Content-type:application/json");
+		}
+		echo json_encode($response);
 	}
 
 

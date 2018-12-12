@@ -28,6 +28,7 @@ class WebhookTest extends WebhookTestBase {
         $args = [
             'projectId' => 'test-project',
             'inputStream' => dirname(__FILE__) . '/data/sample_request.json',
+            'isTest' => true,
         ];
         $webhook = new Webhook($args);
     

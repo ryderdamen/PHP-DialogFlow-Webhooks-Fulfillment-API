@@ -4,7 +4,7 @@
  * Send a simple response to the user, and do not expect a response
  */
 
-include('../src/Webhook.php');
+include(__DIR__ . '/../src/Webhook.php');
 $wh = new Webhook([
     'projectId' => 'test-project-id'
 ]);
