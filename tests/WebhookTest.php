@@ -17,7 +17,7 @@ class WebhookTest extends WebhookTestBase {
         $webhook = new Webhook($this->setup_environment());
 
         $this->assertJsonStringEqualsJsonString(
-            json_encode($webhook->decodedWebhook),
+            json_encode($webhook->decoded_webhook),
             file_get_contents(dirname(__FILE__) . '/data/sample_request.json')
         );
     }
@@ -31,16 +31,16 @@ class WebhookTest extends WebhookTestBase {
         ];
         $webhook = new Webhook($args);
     
-        $this->assertEquals($webhook->decodedWebhook, null);
+        $this->assertEquals($webhook->decoded_webhook, null);
     }
 
 
     /**
-     * Tests the getDecodedWebhook method of the webhook class
+     * Tests the get_decoded_webhook method of the webhook class
      */
-    public function test_getDecodedWebhook() {
+    public function test_get_decoded_webhook() {
         $wh = new Webhook($this->setup_environment());
-        $this->assertEquals(count($wh->getDecodedWebhook()), 7);
+        $this->assertEquals(count($wh->get_decoded_webhook()), 7);
     }
 
 
